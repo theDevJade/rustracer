@@ -1,0 +1,16 @@
+[package]
+name = "rustracer"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+cliclack = "0.1.9"
+colored = "2.1.0"
+rand = "0.8.5"
+reqwest = "0.11.22"
+rustscan = "2.1.1"
+serde = "1.0.193"
+serde_json = "1.0.108"
+tokio = {version = "1.12.0", features = ["full"]}
