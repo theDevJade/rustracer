@@ -2,6 +2,7 @@
 
 pub mod api;
 pub mod host;
+pub mod games;
 mod header;
 use cliclack::*;
 use header::{rainbow_flash_effect, print_animated_rustracer_banner, print_goodbye_banner};

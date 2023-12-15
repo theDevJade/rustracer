@@ -1,6 +1,6 @@
 use cliclack::{intro, input, select, outro, confirm};
 
-use crate::api::gh_snippet::get_random_snippets;
+use crate::{api::gh_snippet::get_random_snippets, games::{Game, Player}};
 
 pub mod port_scanner;
 
@@ -24,5 +24,8 @@ pub async fn host() -> Result<(), Box<dyn std::error::Error>> {
     let port: u16 = input("Enter a port to host on").interact()?;
 
     let snippets: Vec<String> = get_random_snippets().await?;
+
+    let mut game = Game::new("test".to_string(), port, snippets, Player::new(name),20);
+    game.start().await?;
     Ok(())
 }

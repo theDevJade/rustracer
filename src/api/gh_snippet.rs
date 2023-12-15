@@ -9,8 +9,19 @@ use serde_json::Value;
 use std::{error::Error, path::Path, fs::{self, File}, fmt::format, io::Write};
 use cliclack::*;
 
+use super::poem::get_random_poem;
+
 pub async fn get_random_snippets() -> Result<Vec<String>, Box<dyn Error>> {
     let _ = intro("Github Snippets");
+
+    let wow: &str = select("Select a mode")
+    .item("code", "Code", "Random Snippet")
+    .item("poem", "Poem", "Random Poem")
+    .interact()?;
+
+    if wow == "poem" {
+        return Ok(get_random_poem().await?);
+    }
 
     let token: String = input("Enter your Github token")
     .required(true)
@@ -26,7 +37,7 @@ pub async fn get_random_snippets() -> Result<Vec<String>, Box<dyn Error>> {
     spinner.start("Fetching Snippets...");
     let mut snippets = vec![get_random_snippet(&token).await?];
 
-    for _ in 1..(amount - 1) {
+    for _ in 1..(amount) {
         snippets.push(get_random_snippet(&token).await?);
     }
 
@@ -126,19 +137,19 @@ async fn get_random_file_content(client: &reqwest::Client, headers: &HeaderMap, 
         Some("file") => {
             
             let filter_extensions = vec![".md", ".ext", "TODO", "Rakefile", ".txt", "README", "LICENSE", ".rdoc", ".png", ".jpeg", ".swf", ".gitignore"];
-           for extension in filter_extensions {
-               if name.as_str().unwrap().contains(extension) {
-                   let _ = get_random_file_content(client, headers, repo_url, "").await;
-                   break;
-               }
+            
+            let valid = !filter_extensions.iter().any(|&ext| name.as_str().unwrap().contains(ext));
+            println!("💰 Ye found gooold {}. But was it real gold? {}", name.as_str().unwrap(), valid);
+            if !valid {
+                get_random_file_content(client, headers, repo_url, current_path).await?;
             }
+
             let file_url = selected_content["download_url"].as_str().ok_or("Missing file URL")?;
             let file_response = client.get(file_url)
                 .send()
                 .await?
                 .text()
                 .await?;
-            println!("💰 Ye found gooold {}", name.as_str().unwrap());
             Ok(file_response)
         }
         Some("dir") => {
