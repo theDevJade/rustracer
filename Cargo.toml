@@ -6,8 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+async-recursion = "1.0.5"
 cliclack = "0.1.9"
 colored = "2.1.0"
+get_if_addrs = "0.5.3"
 rand = "0.8.5"
 reqwest = "0.11.22"
 rustscan = "2.1.1"
